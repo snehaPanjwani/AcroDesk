@@ -11,6 +11,11 @@ server.use(express.json());
 server.use(express.urlencoded({extended:true}));
 server.use(fileUpload());
 server.use(express.static(path.join(__dirname,"docs")))
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 server.use("/acrodesk",userRouter);
 server.use("/auth",authRouter);

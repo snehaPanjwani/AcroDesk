@@ -5,7 +5,8 @@
   "scripts": {
     "init": "npm install && sequelize db:create && sequelize db:migrate",
     "startdev": "nodemon app.js",
-    "start": "node app.js"
+    "build": "cd ../client && npm install && npm run build",
+    "start": "npm run build && node index.js"
   },
   "keywords": [],
   "author": "",
