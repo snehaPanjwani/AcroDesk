@@ -1,0 +1,43 @@
+npm init -y
+npm install --save express mysql2 path sequelize
+sequelize init
+sequelize db:create
+sequelize model:create --name User --attributes name:String,email:String,password:String,role:
+String,department:String,active_status:Boolean
+sequelize db:migrate
+sequelize model:create --name Query --attributes subject:String,query_text:String,status:String,isactive:Boolean
+sequelize db:migrate
+sequelize model:create --name QueryResponse --attributes response_text:String
+sequelize model:create --name Document --attributes title:String,filepath:String,subject:String,isapproved:Boolean
+sequelize model:create --name Announcement --attributes title:String,message:String,isactive:Boolean
+npm install -g @angular/cli@16.2.6
+
+For react
+npm create vite@latest firstpro
+choose react
+choose JavaScript
+
+IN PACKAGE.JSON
+"scripts": {
+    "init" : "npm install && sequelize db:create && sequelize db:migrate",            //cmd - npm run init(install)                     
+    "startdev": "nodemon app.js",                                                     //cmd - npm run startdev                                
+    "start" : "node app.js"                                                          //cmd - npm run start
+  },
+
+
+Concepts - 28/07/25(Monday)
+1. HTTPSsession
+2. Token System (Currently used)
+3. Authentication/Authorization
+
+For Hosting 
+1 Download git for windows
+2 create a repository in git 
+3 separate frontend in client and backend in server
+4 copy gitignore from client in server
+5 in that write vercel.json 
+6  open git bash in terminal
+7 in git copy the code of create a new repository on the command line
+8 command - git add .
+9 command - git commit -m 'new project'
+10 command - git push origin main
