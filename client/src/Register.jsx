@@ -30,7 +30,7 @@ export default function Register() {
       department: depRef.current.value,
       role: roleRef.current.value,
     }
-    const response = await webService.postCall(webService.URLS.REGISTER,obj)
+    const responses = await webService.postCall(webService.URLS.REGISTER,obj)
     if(responses.status){
       evt.target.reset()
     }
