@@ -1,48 +1,62 @@
-name: Deploy Vite App to GitHub Pages
+name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      # Setup Node.js
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: "18"
 
+      # Install & Build (your app is inside AcroDesk folder)
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd AcroDesk
+          npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          cd AcroDesk
+          npm run build
 
-      - name: Upload production-ready artifact
-        uses: actions/upload-pages-artifact@v2
+      # Upload artifacts
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
         with:
-          path: ./dist   # IMPORTANT: Vite outputs to dist
+          name: build
+          path: AcroDesk/dist
 
   deploy:
-    needs: build
+    needs: build_and_deploy
     runs-on: ubuntu-latest
-
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: production
 
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: dist
+
+      - name: Deploy to Azure Static Web Apps
+        uses: azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/"            # artifact now in root as dist/
+          output_location: "dist"
