@@ -26,9 +26,7 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: |
-          cd AcroDesk
-          npm run build
+        run: npm run build
 
       # Upload artifacts
       - name: Upload artifact for deployment
@@ -58,4 +56,5 @@ jobs:
           action: "upload"
           app_location: "/"            # artifact now in root as dist/
           output_location: "dist"
+
 
