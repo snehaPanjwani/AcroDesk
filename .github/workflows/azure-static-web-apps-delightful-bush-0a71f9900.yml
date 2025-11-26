@@ -10,42 +10,40 @@ on:
       - main
 
 jobs:
-  build_and_deploy:
+  build_and_upload:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Setup Node.js
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: 18
 
-      # Install & Build (your app is inside AcroDesk folder)
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies & build
+        run: |
+          cd AcroDesk
+          npm install
+          npm run build
 
-      - name: Build project
-        run: npm run build
-
-      # Upload artifacts
-      - name: Upload artifact for deployment
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: app_dist
           path: AcroDesk/dist
+          retention-days: 1
 
   deploy:
-    needs: build_and_deploy
     runs-on: ubuntu-latest
-    environment:
-      name: production
+    needs: build_and_upload
 
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: build
+          name: app_dist
           path: dist
 
       - name: Deploy to Azure Static Web Apps
@@ -53,8 +51,6 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "/"            # artifact now in root as dist/
+          action: upload
+          app_location: "/"
           output_location: "dist"
-
-
