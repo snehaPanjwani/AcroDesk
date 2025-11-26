@@ -24,7 +24,6 @@ jobs:
 
       - name: Install dependencies & build
         run: |
-          cd AcroDesk
           npm install
           npm run build
 
@@ -54,3 +53,4 @@ jobs:
           action: upload
           app_location: "/"
           output_location: "dist"
+
